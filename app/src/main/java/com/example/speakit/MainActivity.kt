@@ -1,6 +1,5 @@
-package com.example.ttspdfapp
+package com.example.speakit
 
-import android.R.attr.text
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -8,12 +7,11 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Gravity
-import android.view.View
 import android.widget.*
-import com.example.speakit.R
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.text.PDFTextStripper
 import kotlinx.coroutines.*
+import java.io.File
 import java.util.*
 
 class MainActivity : Activity(), TextToSpeech.OnInitListener {
@@ -145,8 +143,8 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener {
         mainScope.launch {
             try {
                 val text = withContext(Dispatchers.IO) {
-                    contentResolver.openFileDescriptor(uri, "r")?.use { pfd ->
-                        PDDocument.load(pfd.fileDescriptor).use { doc ->
+                    contentResolver.openInputStream(uri)?.use { inputStream ->
+                        PDDocument.load(inputStream).use { doc ->
                             PDFTextStripper().getText(doc)
                         }
                     }?: throw Exception("Unable to open PDF")
