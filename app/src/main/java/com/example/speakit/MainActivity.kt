@@ -143,8 +143,13 @@ class MainActivity : Activity(), TextToSpeech.OnInitListener {
         mainScope.launch {
             try {
                 val text = withContext(Dispatchers.IO) {
+<<<<<<< HEAD
                     contentResolver.openInputStream(uri)?.use { inputStream ->
                         PDDocument.load(inputStream).use { doc ->
+=======
+                    contentResolver.openFileDescriptor(uri, "r")?.use { pfd ->
+                        PDDocument.load(pfd.fileDescriptor as File?).use { doc ->
+>>>>>>> 31072b5fe8ebdafcfb2ab555d82547ee5a029688
                             PDFTextStripper().getText(doc)
                         }
                     }?: throw Exception("Unable to open PDF")
